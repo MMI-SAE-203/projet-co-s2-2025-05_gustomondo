@@ -16,7 +16,6 @@
 
 | Étudiants    | Prénom NOM  |
 | :----------- | :---------- |
-| Étudiant 1   | à compléter |
-| Étudiant 2   | à compléter |
-| Étudiant 3   | à compléter |
-| (Étudiant 4) | à compléter |
+| Étudiant 1   | Max PRIN |
+| Étudiant 2   | Enzo LOCATELLI |
+| Étudiant 3   | Lucas LEBARS |
