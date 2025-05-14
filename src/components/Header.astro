@@ -1,94 +1,93 @@
 ---
 ---
-<header class="bg-gradient-to-r from-[#D2193E] to-[#F77468] py-4 px-6">
-    <div class="container mx-auto flex items-center justify-between">
-      <!-- Logo -->
-      <a href="/" class="flex items-center">
-        <!-- Exemple : une image ou un SVG -->
-        <img 
-          src="gustomondo-logo.png" 
-          alt="GustoMundo Logo" 
-          class="h-10 w-auto"
-        />
-      </a>
-      
-      <!-- Barre de navigation -->
-      <nav class="hidden md:flex items-center space-x-8 text-white font-medium">
-        <a href="/a-propos" class="hover:underline">À Propos</a>
-        
-        <!-- Menu déroulant "Service" -->
-        <div class="relative group">
-          <button 
-            class="flex items-center focus:outline-none hover:underline"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            Service
-            <!-- Icône flèche (optionnelle) -->
-            <svg 
-              class="w-4 h-4 ml-1" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-          <!-- Contenu du dropdown -->
-          <div 
-            class="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg py-2 hidden group-hover:block z-10"
-            role="menu"
-          >
-            <a 
-              href="/service/catalogue" 
-              class="block px-4 py-2 hover:bg-gray-100"
-              role="menuitem"
-            >
-              Catalogue
-            </a>
-            <a 
-              href="/service/recettes" 
-              class="block px-4 py-2 hover:bg-gray-100"
-              role="menuitem"
-            >
-              Recettes
-            </a>
-          </div>
-        </div>
-        
-        <a href="/contact" class="hover:underline">Contact</a>
-      </nav>
-      
-      <!-- Boutons (Se connecter & Commencer) -->
-      <div class="flex space-x-3">
-        <a 
-          href="/login" 
-          class="border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#D2193E] transition"
-        >
-          Se connecter
-        </a>
-        <a 
-          href="/inscription"
-          class="bg-white text-[#D2193E] px-4 py-2 rounded-full hover:bg-gray-200 transition"
-        >
-          Commencer
-        </a>
-      </div>
-      
-      <!-- Burger menu en mobile (optionnel) -->
-      <div class="md:hidden flex items-center ml-4">
-        <!-- Ici, placez un bouton burger si vous voulez un menu mobile -->
-        <button class="text-white focus:outline-none">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-            <path 
-              fill-rule="evenodd" 
-              d="M2 5h16M2 10h16M2 15h16" 
-              clip-rule="evenodd"
-            />
+<header class="bg-gradient-to-r from-[#D2193E] to-[#F77468] py-4 px-6 relative z-50">
+  <div class="container mx-auto flex items-center justify-between">
+    
+    <!-- Burger Mobile (order mobile: 1, desktop:hidden) -->
+    <button 
+      id="mobile-menu-button" 
+      class="order-1 block md:hidden text-white focus:outline-none"
+      aria-label="Ouvrir le menu"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <!-- Logo (order mobile: 2, desktop:1) -->
+    <a href="/" class="order-2 md:order-1 flex items-center">
+      <img src="gustomondo-logo.png" alt="GustoMundo Logo" class="h-10 w-auto"/>
+    </a>
+
+    <!-- Nav Desktop -->
+    <nav class="hidden md:flex space-x-8 text-white font-medium order-3">
+      <a href="/Apropos" class="hover:underline">À Propos</a>
+      <div class="relative group">
+        <button class="flex items-center hover:underline">
+          Service
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
+        <div class="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg py-2 hidden group-hover:block">
+          <a href="/service/catalogue" class="block px-4 py-2 hover:bg-gray-100">Catalogue</a>
+          <a href="/service/recettes" class="block px-4 py-2 hover:bg-gray-100">Recettes</a>
+        </div>
       </div>
+      <a href="/contact" class="hover:underline">Contact</a>
+    </nav>
+
+    <!-- Boutons Desktop -->
+    <div class="hidden md:flex items-center space-x-3 order-4">
+      <a href="/login" class="border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#D2193E] transition">
+        Se connecter
+      </a>
+      <a href="/inscription" class="bg-white text-[#D2193E] px-4 py-2 rounded-full hover:bg-gray-200 transition">
+        Commencer
+      </a>
     </div>
-  </header>
-  
+  </div>
+
+  <!-- Off-canvas Mobile Menu -->
+  <div 
+    id="mobile-menu" 
+    class="fixed top-0 left-0 h-full w-64 bg-[#F77468] text-white shadow transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden z-50 overflow-y-auto"
+  >
+    <div class="p-4 flex justify-end">
+      <button id="mobile-menu-close" class="focus:outline-none text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="mt-8 flex flex-col space-y-4 px-4">
+      <a href="/Apropos" class="hover:underline">À Propos</a>
+      <a href="/service/catalogue" class="hover:underline">Catalogue</a>
+      <a href="/service/recettes" class="hover:underline">Recettes</a>
+      <a href="/contact" class="hover:underline">Contact</a>
+    </nav>
+    <div class="mt-8 border-t border-white pt-4 px-4 space-y-4">
+      <a href="/login" class="block border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#D2193E] transition">
+        Se connecter
+      </a>
+      <a href="/inscription" class="block bg-white text-[#D2193E] px-4 py-2 rounded-full hover:bg-gray-200 transition">
+        Commencer
+      </a>
+    </div>
+  </div>
+
+  <script type="module">
+    document.addEventListener('DOMContentLoaded', () => {
+      const openBtn  = document.getElementById('mobile-menu-button');
+      const closeBtn = document.getElementById('mobile-menu-close');
+      const menu     = document.getElementById('mobile-menu');
+
+      openBtn.addEventListener('click', () => {
+        menu.classList.remove('-translate-x-full');
+      });
+      closeBtn.addEventListener('click', () => {
+        menu.classList.add('-translate-x-full');
+      });
+    });
+  </script>
+</header>
