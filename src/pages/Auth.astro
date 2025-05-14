@@ -1,0 +1,9 @@
+---
+import AuthForm from '../components/AuthForm.vue';
+import Layout from '../layouts/Layout.astro';
+---
+<Layout>
+<main class="min-h-screen bg-[#f9f5ea] flex items-center justify-center">
+  <AuthForm client:load />
+</main>
+</Layout>
