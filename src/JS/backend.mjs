@@ -6,10 +6,23 @@ const pb = new PocketBase('http://127.0.0.1:8090');
 
 
 export async function getProduits() {
-  const produits = await pb.collection('Produit').getFullList();
-  return produits;
-}
+  const list = await pb.collection('Produit').getFullList({
+    sort: '-created',
+  });
 
+  // Ajout de l'URL d'image à chaque record
+  return list.map((rec) => ({
+    ...rec,
+    imgUrl: pb.files.getURL(rec, rec.image),  // SDK ≥ 0.15
+  }));
+}
+/* ▸ Un produit par ID ------------------------------------------------------- */
+export async function produitById(id) {
+  const rec = await pb.collection('Produit').getOne(id);
+  if (!rec) return null;
+  rec.imgUrl = pb.files.getUrl(rec, rec.image);
+  return rec;
+}
 
 
 
