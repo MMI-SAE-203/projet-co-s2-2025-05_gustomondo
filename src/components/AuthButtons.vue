@@ -23,7 +23,7 @@ function logout() {
     <template v-if="isLogged">
       <!-- Lien vers /Compte (C majuscule) -->
       <a
-        href="/Compte"
+        href="/Auth"
         :class="mobile
           ? 'block border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#D2193E]'
           : 'border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#D2193E]'"
@@ -42,7 +42,7 @@ function logout() {
     <template v-else>
       <!-- Liens vers /Login (L majuscule) -->
       <a
-        href="/Login"
+        href="/login"
         :class="mobile
           ? 'block border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#D2193E]'
           : 'border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#D2193E]'"
@@ -50,7 +50,7 @@ function logout() {
         Se connecter
       </a>
       <a
-        href="/Login"
+        href="/login"
         :class="mobile
           ? 'block bg-white text-[#D2193E] px-4 py-2 rounded-full hover:bg-gray-200'
           : 'bg-white text-[#D2193E] px-4 py-2 rounded-full hover:bg-gray-200'"
