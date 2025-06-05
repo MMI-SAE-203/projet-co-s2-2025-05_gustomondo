@@ -6,7 +6,7 @@ export async function POST({ request }) {
     const email    = formData.get('email');
     const password = formData.get('password');
 
-    const pb = new PocketBase("https://gustomundo.lucas-lebars.fr:443");
+    const pb = new PocketBase("http://127.0.0.1:8090");
     const authData = await pb.collection('users').authWithPassword(email, password);
 
     const jwt = authData.token;
