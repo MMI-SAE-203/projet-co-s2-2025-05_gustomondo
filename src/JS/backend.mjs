@@ -102,6 +102,89 @@ export async function createCommande(data) {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/*  Recettes (collection "Recettes")                                   */
+/* ------------------------------------------------------------------ */
+
+// 1. Récupérer toutes les recettes (sans filtre)
+export async function getRecettes() {
+  const list = await pb.collection('Recettes').getFullList({ sort: '-created' });
+  return list.map((rec) => ({
+    ...rec,
+    imgUrl: rec.Image_recette ? pb.files.getURL(rec, rec.Image_recette) : null,
+  }));
+}
+
+export async function getRecetteById(id) {
+  try {
+    const rec = await pb.collection("Recettes").getOne(id);
+    if (!rec) return null;
+    // Ajout de l’URL de l’image si elle existe
+    rec.imgUrl = rec.Image_recette ? pb.files.getURL(rec, rec.Image_recette) : null;
+    return rec;
+  } catch (err) {
+    console.error("Erreur getRecetteById:", err);
+    return null;
+  }
+}
+
+// 2. Récupérer les recettes selon deux filtres : temps + difficulté
+export async function getRecettesByFilters(temps = '', difficulte = '') {
+  const conditions = [];
+  if (temps) {
+    const t = temps.trim();
+    conditions.push(`Temps_de_preparation_recette = "${t}"`);
+  }
+  if (difficulte) {
+    const d = difficulte.trim();
+    conditions.push(`Difficulte_recette = "${d}"`);
+  }
+  const filterString = conditions.length > 0 ? conditions.join(' && ') : '';
+
+  const list = await pb.collection('Recettes').getFullList({ filter: filterString });
+  return list.map((rec) => ({
+    ...rec,
+    imgUrl: rec.Image_recette ? pb.files.getURL(rec, rec.Image_recette) : null,
+  }));
+}
+
+// 3. Récupérer la liste des valeurs distinctes de "Temps_de_preparation_recette"
+export async function getTimes() {
+  // On ne récupère que le champ Temps_de_preparation_recette pour alléger
+  const rows = await pb
+    .collection('Recettes')
+    .getFullList({ fields: 'Temps_de_preparation_recette' });
+
+  // On trim, on filtre non-null, on transforme en Set pour uniques, puis on sort
+  const uniques = new Set(
+    rows
+      .map((r) => r.Temps_de_preparation_recette?.trim())
+      .filter(Boolean)
+  );
+  return [...uniques].sort((a, b) => {
+    // Si vous voulez trier numériquement (ex. “5 minutes” avant “10 minutes”), il faut extraire le chiffre
+    // Sinon, on laisse un tri lexicographique pour l’exemple :
+    const na = parseInt(a, 10);
+    const nb = parseInt(b, 10);
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    return a.localeCompare(b);
+  });
+}
+
+// 4. Récupérer la liste des valeurs distinctes de "Difficulte_recette"
+export async function getDifficulties() {
+  const rows = await pb
+    .collection('Recettes')
+    .getFullList({ fields: 'Difficulte_recette' });
+
+  const uniques = new Set(
+    rows
+      .map((r) => r.Difficulte_recette?.trim())
+      .filter(Boolean)
+  );
+  return [...uniques].sort();
+}
+
 
 // export async function signupUser(email, password, additionalData = {}) {
 //   try {
