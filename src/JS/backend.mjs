@@ -6,6 +6,8 @@ const pb = new PocketBase('http://127.0.0.1:8090');
 
 pb.autoCancellation(false);
 
+
+
 export async function getProduits() {
   const list = await pb.collection('Produit').getFullList({
     sort: '-created',
@@ -185,6 +187,87 @@ export async function getDifficulties() {
   return [...uniques].sort();
 }
 
+function decodeJwtPayload(token) {
+  try {
+    // 1) On sépare par “.”, on prend la partie [1] (payload)
+    const base64Payload = token.split('.')[1];
+    if (!base64Payload) return null;
+
+    // 2) On remplace les tirets et traits de soulignement (pour URL-safe base64)
+    const base64 = base64Payload.replace(/-/g, '+').replace(/_/g, '/');
+
+    // 3) On décode le base64 en JSON string
+    const jsonPayload = Buffer.from(base64, 'base64').toString('utf-8');
+    return JSON.parse(jsonPayload);
+  } catch (err) {
+    console.error('[decodeJwtPayload] Erreur de décodage du JWT :', err);
+    return null;
+  }
+}
+
+/**
+ * Récupère l’objet “user” à partir d’un token JWT PocketBase.  
+ * @param {string} token — Le JWT stocké dans le cookie “pb_token”.
+ * @returns {Promise< { id, email, username, avatarUrl } | null >}
+ */
+export async function getUserFromToken(token) {
+  if (!token) {
+    return null;
+  }
+
+  // 1) Décoder le payload pour en extraire “id”
+  const payload = decodeJwtPayload(token);
+  if (!payload || !payload.id) {
+    console.warn('[getUserFromToken] JWT invalide ou sans champ "id".');
+    return null;
+  }
+  const userId = payload.id;
+
+  try {
+    // 2) Récupérer le record complet de l’utilisateur depuis PocketBase
+    const userRecord = await pb.collection('users').getOne(userId);
+    if (!userRecord) {
+      console.warn(`[getUserFromToken] Aucun utilisateur trouvé pour id=${userId}`);
+      return null;
+    }
+
+    // 3) Construire l’URL publique de l’avatar si le champ “avatar” existe
+    let avatarUrl = null;
+    if (Array.isArray(userRecord.avatar) && userRecord.avatar.length > 0) {
+      avatarUrl = pb.files.getURL(userRecord, 'avatar');
+    }
+
+    // 4) Retourner un objet simplifié
+    return {
+      id: userRecord.id,
+      email: userRecord.email,
+      username: userRecord.username,
+      avatarUrl
+    };
+  } catch (err) {
+    console.error('[getUserFromToken] Erreur en récupérant l’utilisateur :', err);
+    return null;
+  }
+}
+
+/**
+ * Produit une Response Astro pour la déconnexion :
+ * - Supprime le cookie “pb_token” en posant Max-Age=0
+ * - Redirige (303) vers /login
+ */
+export function logoutResponse() {
+  return new Response(null, {
+    status: 303,
+    headers: {
+      'Set-Cookie': `pb_token=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax`,
+      'Location': '/login'
+    }
+  });
+}
+
+
+
+
 
 // export async function signupUser(email, password, additionalData = {}) {
 //   try {
@@ -208,17 +291,5 @@ export async function getDifficulties() {
 //   }
 // }
 
-// /**
-//  * Récupère la liste complète des recettes.
-//  */
-// export async function getRecettes() {
-//   try {
-//     const recettes = await pb.collection('Recette').getFullList();
-//     return recettes;
-//   } catch (error) {
-//     console.error('Erreur lors de la récupération des recettes :', error);
-//     throw error;
-//   }
-// }
 
  export default pb;
