@@ -1,48 +1,20 @@
-
-
 import PocketBase from 'pocketbase';
 
 const pb = new PocketBase('http://127.0.0.1:8090');
 
 pb.autoCancellation(false);
-
-
-
-export async function getProduits() {
-  const list = await pb.collection('Produit').getFullList({
-    sort: '-created',
-  });
-
-  // Ajout de l'URL d'image à chaque record
-  return list.map((rec) => ({
-    ...rec,
-    imgUrl: pb.files.getURL(rec, rec.image),  // SDK ≥ 0.15
-  }));
-}
 /* ▸ Un produit par ID ------------------------------------------------------- */
-export async function produitById(id) {
+async function produitById(id) {
   const rec = await pb.collection('Produit').getOne(id);
   if (!rec) return null;
   rec.imgUrl = pb.files.getURL(rec, rec.image);
   return rec;
 }
 
-
-export async function getProduitsByCategory(type = '') {
-  const filter = type ? `Produits = "${type}"` : '';
-  console.log("→ getProduitsByCategory :", { type, }); 
-  const produits = await pb.collection('Produit').getFullList({ filter });
-
-  return produits.map((p) => ({
-    ...p,
-    imgUrl: p.image ? pb.files.getURL(p, p.image) : null,
-  }));
-}
-
 /* ------------------------------------------------------------------ */
 /*  Catégories distinctes (valeurs du champ Produits)                 */
 /* ------------------------------------------------------------------ */
-export async function getCategories() {
+async function getCategories() {
   // Ne ramène que la colonne Produits pour alléger la requête
   const rows = await pb.collection('Produit').getFullList({ fields: 'Produits' });
 
@@ -50,7 +22,7 @@ export async function getCategories() {
   return [...new Set(rows.map(r => r.Produits).filter(Boolean))].sort();
 }
 
-export async function getPays() {
+async function getPays() {
   // Ne ramène que la colonne "Pays" pour alléger
   const rows = await pb.collection('Produit').getFullList({ fields: 'Pays' });
 
@@ -64,7 +36,7 @@ export async function getPays() {
 }
 
 /**filtre pays**/
-export async function getProduitsByFilters(categorie = '', pays = '') {
+async function getProduitsByFilters(categorie = '', pays = '') {
   // On prépare les conditions si une valeur est fournie
   const conditions = [];
   if (categorie) {
@@ -91,33 +63,7 @@ export async function getProduitsByFilters(categorie = '', pays = '') {
   }));
 }
 
-
-
-
-export async function createCommande(data) {
-  try {
-    const commande = await pb.collection('commandes').create(data);
-    return commande;
-  } catch (error) {
-    console.error('Erreur lors de la création de la commande :', error);
-    throw error;
-  }
-}
-
-/* ------------------------------------------------------------------ */
-/*  Recettes (collection "Recettes")                                   */
-/* ------------------------------------------------------------------ */
-
-// 1. Récupérer toutes les recettes (sans filtre)
-export async function getRecettes() {
-  const list = await pb.collection('Recettes').getFullList({ sort: '-created' });
-  return list.map((rec) => ({
-    ...rec,
-    imgUrl: rec.Image_recette ? pb.files.getURL(rec, rec.Image_recette) : null,
-  }));
-}
-
-export async function getRecetteById(id) {
+async function getRecetteById(id) {
   try {
     const rec = await pb.collection("Recettes").getOne(id);
     if (!rec) return null;
@@ -131,7 +77,7 @@ export async function getRecetteById(id) {
 }
 
 // 2. Récupérer les recettes selon deux filtres : temps + difficulté
-export async function getRecettesByFilters(temps = '', difficulte = '') {
+async function getRecettesByFilters(temps = '', difficulte = '') {
   const conditions = [];
   if (temps) {
     const t = temps.trim();
@@ -151,7 +97,7 @@ export async function getRecettesByFilters(temps = '', difficulte = '') {
 }
 
 // 3. Récupérer la liste des valeurs distinctes de "Temps_de_preparation_recette"
-export async function getTimes() {
+async function getTimes() {
   // On ne récupère que le champ Temps_de_preparation_recette pour alléger
   const rows = await pb
     .collection('Recettes')
@@ -174,7 +120,7 @@ export async function getTimes() {
 }
 
 // 4. Récupérer la liste des valeurs distinctes de "Difficulte_recette"
-export async function getDifficulties() {
+async function getDifficulties() {
   const rows = await pb
     .collection('Recettes')
     .getFullList({ fields: 'Difficulte_recette' });
@@ -221,7 +167,7 @@ function decodeJwtPayload(token) {
  * @param {string} token — Le JWT stocké en cookie
  * @returns {Promise<{id:string, email:string, username:string, avatarUrl:string|null}|null>}
  */
-export async function getUserFromToken(token) {
+async function getUserFromToken(token) {
   if (!token) {
     return null;
   }
@@ -268,7 +214,7 @@ export async function getUserFromToken(token) {
  * - Supprime le cookie "pb_token" en le plaçant à Max-Age=0
  * - Renvoie un 303 (redirection) vers /login
  */
-export function logoutResponse() {
+function logoutResponse() {
   return new Response(null, {
     status: 303,
     headers: {
@@ -278,30 +224,4 @@ export function logoutResponse() {
   });
 }
 
-
-
-
-// export async function signupUser(email, password, additionalData = {}) {
-//   try {
-//     const data = { email, password, ...additionalData };
-//     const user = await pb.collection('users').create(data);
-//     return user;
-//   } catch (error) {
-//     console.error('Erreur lors de l’inscription :', error);
-//     throw error;
-//   }
-// }
-
-
-// export async function loginUser(email, password) {
-//   try {
-//     const authData = await pb.collection('users').authWithPassword(email, password);
-//     return authData;
-//   } catch (error) {
-//     console.error('Erreur lors de la connexion :', error);
-//     throw error;
-//   }
-// }
-
-
- export default pb;
+export { getPays as a, getProduitsByFilters as b, getUserFromToken as c, getRecetteById as d, getTimes as e, getDifficulties as f, getCategories as g, getRecettesByFilters as h, logoutResponse as l, produitById as p };
