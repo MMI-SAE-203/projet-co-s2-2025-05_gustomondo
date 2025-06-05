@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import PocketBase from 'pocketbase'
 
 // URL locale de PocketBase
-const pb = new PocketBase('http://127.0.0.1:8090')
+const pb = new PocketBase('http://127.0.0.1:8090');
 
 // Champs liés à l'interface
 const email = ref('')

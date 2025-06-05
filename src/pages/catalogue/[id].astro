@@ -1,0 +1,112 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import { produitById } from "../../JS/backend.mjs";
+
+// Récupère l'ID depuis l'URL (par ex. /catalogue/abc123 → id === "abc123")
+const { id } = Astro.params;
+
+// Pour vérifier la valeur d'id dans la console serveur
+console.log("→ Dynamic page catalogue, id reçu :", id);
+
+let produit = null;
+
+try {
+  // Essaie de récupérer le produit depuis PocketBase
+  produit = await produitById(id);
+} catch (err) {
+  // Si PocketBase renvoie un 404, on le note dans la console et on laisse produit = null
+  console.error("Erreur récupération produitById(", id, "):", err);
+}
+
+// Si produit est null (soit parce qu'il n'existe pas en base, soit qu'il y a une erreur),
+// on redirige vers la liste des produits (ou vous pouvez choisir d'afficher une 404 personnalisée).
+if (!produit) {
+  return Astro.redirect("/catalogue");
+}
+---
+
+<Layout title={produit.nom}>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold text-center mb-8">{produit.nom}</h1>
+
+    <div class="flex justify-center">
+      <div class="w-full max-w-md bg-white border border-gray-200 shadow-md rounded-lg 
+                  overflow-hidden transition transform hover:scale-105 hover:shadow-xl">
+
+        {produit.imgUrl ? (
+          <img
+            class="w-full h-64 object-cover"
+            src={produit.imgUrl}
+            alt={produit.nom}
+            loading="lazy"
+          />
+        ) : (
+          <div class="w-full h-64 flex items-center justify-center bg-gray-100 text-gray-400">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 11l3 3 5-5" />
+            </svg>
+          </div>
+        )}
+
+        <div class="p-4">
+          <h2 class="text-xl font-bold text-gray-800 mb-2">{produit.nom}</h2>
+
+          {produit.prix && (
+            <p class="text-lg font-semibold text-[#D2193E] mb-4">
+              {produit.prix} €
+            </p>
+          )}
+
+          {produit.description && (
+            <div class="text-gray-700 mb-4" set:html={produit.description}></div>
+          )}
+
+          <ul class="text-sm text-gray-600 space-y-1">
+            {produit.Produits && (
+              <li>
+                <span class="font-medium">Catégorie :</span> {produit.Produits}
+              </li>
+            )}
+            {produit.Pays && (
+              <li>
+                <span class="font-medium">Pays :</span> {produit.Pays}
+              </li>
+            )}
+             {produit.stock && (
+              <li>
+                <span class="font-medium">Pays :</span> {produit.stock}
+              </li>
+            )}
+            {produit.created && (
+              <li>
+                <span class="font-medium">Date d’ajout :</span>{" "}
+                {new Date(produit.created).toLocaleDateString("fr-FR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric"
+                })}
+              </li>
+            )}
+          </ul>
+
+          <div class="mt-6">
+            <a
+              href="/catalogue"
+              class="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded 
+                     hover:bg-gray-300 transition-colors"
+            >
+              ← Retour au catalogue
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</Layout>
