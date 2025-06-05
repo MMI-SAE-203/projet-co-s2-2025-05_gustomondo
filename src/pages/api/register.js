@@ -45,7 +45,7 @@ export async function POST({ request }) {
     }
 
     // 2) Instanciation de PocketBase (local ou votre VPS)
-    const pb = new PocketBase("https://gustomundo.lucas-lebars.fr:443");
+    const pb = new PocketBase("http://127.0.0.1:8090");
 
     // 3) Création du nouvel utilisateur
     const newUser = await pb.collection('users').create({

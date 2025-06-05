@@ -5,7 +5,7 @@ import PocketBase from 'pocketbase'
 // ─────────────────────────────────────────────────────────────
 // 1) Instance PocketBase : URL + options
 // ─────────────────────────────────────────────────────────────
-const pb = new PocketBase('https://gustomundo.lucas-lebars.fr') 
+const pb = new PocketBase("http://127.0.0.1:8090");
 pb.autoCancellation(false)                                      
 
 // Log automatique de TOUTES les requêtes sortantes (utile en dev)
@@ -20,7 +20,49 @@ function logPbError(tag, err) {
   console.error(`[${tag}] URL     :`, err.url)
   console.error(`[${tag}] RESPONSE:`, err.response)
   console.error(`[${tag}] RAW     :`, err.originalError?.message)
+
 }
+
+// -----------------------------------------------------------------------------
+// USERS
+// -----------------------------------------------------------------------------
+/**
+ * Récupère la liste complète des utilisateurs, du plus récent au plus ancien,
+ * en ajoutant l’URL publique de l’avatar (avatarUrl) si disponible.
+ */
+export async function getUsers() {
+  try {
+    const list = await pb
+      .collection('users')
+      .getFullList({ sort: '-created' });
+
+    // Ajout de l'URL du fichier avatar
+    return list.map(rec => ({
+      ...rec,
+      avatarUrl: rec.avatar ? pb.files.getURL(rec, rec.avatar) : null,
+    }));
+  } catch (err) {
+    logPbError('getUsers', err);
+    throw err;
+  }
+}
+
+/**
+ * Récupère un utilisateur par son id et attache avatarUrl.
+ */
+export async function userById(id) {
+  try {
+    const rec = await pb.collection('users').getOne(id);
+    if (!rec) return null;
+
+    rec.avatarUrl = rec.avatar ? pb.files.getURL(rec, rec.avatar) : null;
+    return rec;
+  } catch (err) {
+    logPbError('userById', err);
+    return null;
+  }
+}
+
 
 // ─────────────────────────────────────────────────────────────
 // 2) Produits

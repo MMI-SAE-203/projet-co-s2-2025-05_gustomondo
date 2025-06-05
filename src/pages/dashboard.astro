@@ -1,69 +1,65 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getUserFromToken } from '../JS/backend.mjs';
+import Layout from "../layouts/Layout.astro"
+import { getUsers } from '../JS/backend.mjs';
 
-
-
-const cookieHeader = Astro.request.headers.get('cookie') || '';
-
-function getCookieValue(header, name) {
-  const match = header
-    .split(';')
-    .map(c => c.trim())
-    .find(c => c.startsWith(`${name}=`));
-  if (!match) return null;
-  return decodeURIComponent(match.split('=')[1]);
-}
-
-const token = getCookieValue(cookieHeader, 'pb_token');
-
-let user = null;
-let errorMessage = null;
-if (token) {
-  user = await getUserFromToken(token);
-  if (!user) {
-    errorMessage = 'Session invalide ou expirée. Merci de vous reconnecter.';
-  }
-} else {
-  errorMessage = 'Vous n’êtes pas connecté(e).';
-}
+// Tous les utilisateurs, triés dans getUsers()
+const users = await getUsers();
 ---
 
-<Layout title="Mon Compte – GustoMundo">
-  <section class="flex flex-col items-center py-12">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-      <h1 class="text-2xl font-semibold mb-6 text-center">Mon compte</h1>
+<Layout title="Nos utilisateurs">
+  <section class="py-12">
+    {users.length === 0 ? (
+      <p class="text-center text-gray-500">
+        Aucun utilisateur trouvé.
+      </p>
+    ) : (
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {users.map((u) => (
+          <div
+            class="group block bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition"
+          >
+            {u.avatarUrl ? (
+              <img
+                src={u.avatarUrl}
+                alt={`Avatar de ${u.username}`}
+                loading="lazy"
+                class="w-full h-48 object-cover object-center group-hover:scale-105 transition-transform duration-200"
+              />
+            ) : (
+              <div
+                class="w-full h-48 flex items-center justify-center bg-gray-100 text-gray-400"
+              >
+                <svg
+                  class="w-10 h-10"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5.5 7a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 20a9 9 0 1118 0H3z"
+                  />
+                </svg>
+              </div>
+            )}
 
-      {errorMessage && (
-        <div class="text-red-600 text-center mb-4">
-          {errorMessage}
-          <p><a href="/login" class="text-blue-600 hover:underline">Aller à la connexion</a></p>
-        </div>
-      )}
-
-      {user && (
-        <div class="flex flex-col items-center">
-          {user.avatarUrl ? (
-            <img src={user.avatarUrl}
-                 alt={`Avatar de ${user.username}`}
-                 class="w-24 h-24 rounded-full mb-4" />
-          ) : (
-            <div class="w-24 h-24 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
-              <span class="text-gray-500 text-xl">?</span>
+            <div class="p-4">
+              <h2 class="text-lg font-semibold text-gray-800 break-all">
+                {u.username}
+              </h2>
+              <p class="text-sm text-gray-600 break-all">{u.email}</p>
             </div>
-          )}
-
-          <p class="text-gray-700 mb-2"><strong>Pseudo :</strong> {user.username}</p>
-          <p class="text-gray-700 mb-2"><strong>Email :</strong> {user.email}</p>
-
-          <form method="post" action="/api/logout" class="mt-4 w-full">
-            <button type="submit"
-                    class="w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
-              Se déconnecter
-            </button>
-          </form>
-        </div>
-      )}
-    </div>
+          </div>
+        ))}
+      </div>
+    )}
   </section>
 </Layout>
