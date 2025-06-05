@@ -4,8 +4,8 @@
 Éléménts à renseigner pour la soutenance :
 
 - [ ] Nom du projet : GustoMundo
-- [ ] URL de la landing page :
-- [ ] URL de l'application finale :
+- [ ] URL de la landing page : https://gustmundo.netlify.app
+- [ ] URL de l'application finale : https://gustmundo.netlify.app
 - [ ] URL de connexion au back office :httgustomundo.lucas-lebars.fr/_/
 - [ ] Identifiant de connexion au backoffice :enzo.locatelli02@edu.univ-fcomte.fr
 - [ ] Mot de passe de connexion au backoffice : ProjetCO2025
