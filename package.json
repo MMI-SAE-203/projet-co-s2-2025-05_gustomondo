@@ -16,6 +16,7 @@
     "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
+    "@astrojs/netlify": "^6.3.4",
     "@vitejs/plugin-vue": "^5.2.4"
   }
 }

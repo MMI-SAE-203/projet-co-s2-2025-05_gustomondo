@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AccountInfo from '../components/AccountInfo.vue';
+---
+<Layout title="Mon compte – GustoMundo">
+  <main class="min-h-screen bg-[#f9f5ea] flex items-center justify-center">
+    <AccountInfo client:load />
+  </main>
+</Layout>

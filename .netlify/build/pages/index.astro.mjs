@@ -1,0 +1,68 @@
+import { e as createComponent, i as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_l7TnKUXe.mjs';
+import 'kleur/colors';
+import { $ as $$Layout } from '../chunks/Layout_DrxQTHDd.mjs';
+export { renderers } from '../renderers.mjs';
+
+const $$Index = createComponent(($$result, $$props, $$slots) => {
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, {}, { "default": ($$result2) => renderTemplate`  ${maybeRenderHead()}<div class="font-jakarta font-bold"> <!-- SECTION HERO AVEC ONDE EN FOND --> <section class="relative h-screen bg-cover bg-center flex flex-col justify-center items-center overflow-hidden" style="background-image: url('/background.png');"> <!-- Overlay pour améliorer la lisibilité --> <div class="absolute inset-0 bg-black/30"></div> <!-- Contenu centré, au-dessus de l'overlay --> <div class="relative z-10 text-white text-center px-4 max-w-2xl"> <h1 class="text-4xl md:text-5xl font-jakarta italic mb-4">
+Un Voyage Culinaire Sans Frontières !
+</h1> <p class="mb-8 text-lg leading-relaxed">
+Découvrez des recettes authentiques, des inspirations gourmandes 
+          et des produits venus des quatre coins du monde. 
+          Faites voyager vos papilles en un clic !
+</p> <a href="#solution" class="bg-emerald-500 text-white py-3 px-6 rounded-full hover:bg-red-500 transition">
+DÉCOUVRIR
+</a> </div> <!-- Vague en bas du hero --> <svg class="absolute bottom-0 left-0 w-full" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill="#B81D2F" d="M0,120 C360,0 10,200 1440,0 L1440,120 L0,120 Z"></path> </svg> </section> <!-- SECTION "GUSTOMUNDO EST TA SOLUTION" --> <section id="solution" class="bg-white pt-12 pb-12 relative" style="background-color: #FFF9EC;"> <div class="container mx-auto px-4"> <h2 class="text-center text-2xl md:text-3xl mb-10">
+GUSTOMUNDO EST TA SOLUTION
+</h2> <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center"> <!-- 1. Des produits de qualité --> <div class="space-y-3"> <img src="icon-quality.png" alt="Qualité" class="mx-auto w-30 h-30"> <h3 class="text-xl">Des produits de qualités</h3> <p class="text-gray-700 text-sm">
+Sélectionnés avec soin et respect de l'environnement.
+</p> </div> <!-- 2. Une équipe à l'écoute --> <div class="space-y-3"> <img src="icon-team.png" alt="Équipe" class="mx-auto w-30 h-30"> <h3 class="text-xl">Une équipe à l’écoute</h3> <p class="text-gray-700 text-sm">
+Toujours prête à vous conseiller et partager nos astuces.
+</p> </div> <!-- 3. Des goûts uniques --> <div class="space-y-3"> <img src="icon-taste.png" alt="Goûts uniques" class="mx-auto w-30 h-30"> <h3 class="text-xl">Des goûts uniques</h3> <p class="text-gray-700 text-sm">
+Savourez une multitude de saveurs authentiques.
+</p> </div> </div> </div> </section> <!-- SECTION "SUR CE SITE TU TROUVERAS" --> <section class="pt-12 pb-12" style="background-color: #FFF9EC;"> <div class="container mx-auto px-4"> <h2 class="text-center text-2xl md:text-3xl mb-10">
+SUR CE SITE TU TROUVERAS
+</h2> <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center"> <!-- Des recettes délicieuses --> <div class="space-y-3"> <img src="icon-recipe.png" alt="Recettes délicieuses" class="mx-auto w-45 h-60"> <h3 class="text-xl">Des recettes délicieuses</h3> <p class="text-gray-700 text-sm">
+Pour vous inspirer et voyager dans votre cuisine.
+</p> </div> <!-- Des produits sélectionnés minutieusement --> <div class="space-y-3"> <img src="icon-products.png" alt="Produits sélectionnés" class="mx-auto w-45 h-60"> <h3 class="text-xl">
+Des produits sélectionnés minutieusement
+</h3> <p class="text-gray-700 text-sm">
+Une sélection stricte pour garantir qualité et fraîcheur.
+</p> </div> <!-- Les marchands à côté de chez toi --> <div class="space-y-3"> <img src="icon-location.png" alt="Marchands locaux" class="mx-auto w-45 h-60"> <h3 class="text-xl">Les marchands à côté de chez toi</h3> <p class="text-gray-700 text-sm">
+Soutenez l’économie locale et réduisez votre empreinte.
+</p> </div> </div> </div> </section> <!-- SECTION "NOTRE ÉQUIPE" --> <section class="pt-12 pb-12" style="background-color: #FFF9EC;"> <div class="container mx-auto px-4"> <h2 class="text-center text-2xl md:text-3xl mb-10">NOTRE ÉQUIPE</h2> <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center"> <!-- Exemples d’images équipe --> <div class="p-4 bg-white shadow rounded"> <img src="lucas.png" alt="Lucas" class="mx-auto w-60 h-60 object-cover rounded-full"> <h3 class="mt-4">Lucas</h3> <p class="text-gray-600">Développeur / Designer</p> </div> <div class="p-4 bg-white shadow rounded"> <img src="enzo.png" alt="Enzo" class="mx-auto w-60 h-60 object-cover rounded-full"> <h3 class="mt-4">Enzo</h3> <p class="text-gray-600">Développeur / Designer</p> </div> <div class="p-4 bg-white shadow rounded"> <img src="max.png" alt="Max" class="mx-auto w-60 h-60 object-cover rounded-full"> <h3 class="mt-4">Max</h3> <p class="text-gray-600">Communication</p> </div> </div> </div> </section> <!-- SECTION "PRODUITS POPULAIRES" ET "RECETTE POPULAIRE" --> <section class="bg-white pt-12 pb-12"> <div class="container mx-auto px-4"> <div class="flex flex-col md:flex-row md:justify-between items-start mb-8"> <h2 class="text-2xl md:text-3xl mb-6 md:mb-0">PRODUITS POPULAIRES</h2> <h2 class="text-2xl md:text-3xl">RECETTE POPULAIRE</h2> </div> <div class="grid grid-cols-1 md:grid-cols-4 gap-8"> <!-- 3 colonnes Produits populaires, 1 colonne Recette populaire --> <!-- Produits populaires --> <div class="col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6"> <div class="border rounded p-4"> <div class="w-full h-40 flex items-center justify-center bg-white overflow-hidden mb-2"> <img src="produit1.png" alt="Produit 1" class="max-w-full max-h-full object-contain"> </div> <h3 class="text-lg">Goyave</h3> <p class="text-sm text-gray-600">Très répandue au Mexique, sucrée et parfumée.</p> <p class="mt-2">6,5€</p> </div> <div class="border rounded p-4"> <div class="w-full h-40 flex items-center justify-center bg-white overflow-hidden mb-2"> <img src="produit2.png" alt="Produit 2" class="max-w-full max-h-full object-contain"> </div> <h3 class="text-lg">Papaye mexicaine (Maradol)</h3> <p class="text-sm text-gray-600">Grosse variété locale.</p> <p class="mt-2">5,8€</p> </div> <div class="border rounded p-4"> <div class="w-full h-40 flex items-center justify-center bg-white overflow-hidden mb-2"> <img src="produit3.png" alt="Produit 3" class="max-w-full max-h-full object-contain"> </div> <h3 class="text-lg">Takis</h3> <p class="text-sm text-gray-600">Snack piquant très populaire au Mexique.</p> <p class="mt-2">4,2€</p> </div> </div> <!-- Recette populaire (1 colonne) --> <div class="border rounded p-4"> <div class="w-full h-40 flex items-center justify-center bg-white overflow-hidden mb-2"> <img src="arepas.png" alt="Recette populaire" class="max-w-full max-h-full object-contain"> </div> <h3 class="text-lg">Arepas Vénézuéliennes</h3> <p class="text-sm text-gray-600">Une recette gourmande et simple à préparer.</p> <a href="#" class="inline-block mt-4 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition">
+Voir la recette
+</a> </div> </div> </div> </section> <!-- SECTION FAQ (QUESTIONS FRÉQUENTES) --> <section class="bg-white pt-12 pb-12"> <div class="container mx-auto px-4"> <h2 class="text-2xl md:text-3xl mb-8">QUESTIONS FRÉQUENTES</h2> <div class="space-y-4"> <!-- Exemple d’un accordéon basique --> <details class="border rounded p-4"> <summary class="cursor-pointer">Quels sont les moyens de paiement acceptés ?</summary> <p class="mt-2 text-gray-700">
+Nous acceptons les cartes bancaires (Visa, MasterCard), PayPal, et le virement bancaire.
+</p> </details> <details class="border rounded p-4"> <summary class="cursor-pointer">
+Puis‑je filtrer les recettes par ingrédient, ou difficulté ?
+</summary> <p class="mt-2 text-gray-700">
+Absolument ! Notre page de recettes propose un système de filtres avancés.
+</p> </details> <details class="border rounded p-4"> <summary class="cursor-pointer">
+Les recettes sont‑elles authentiques ou revisitées ?
+</summary> <p class="mt-2 text-gray-700">
+Nous proposons un mélange des deux : des plats traditionnels ainsi que des adaptations modernes.
+</p> </details> <!-- Ajoutez d’autres questions si nécessaire --> </div> </div> </section> <!-- SECTION "AVIS CLIENTS" --> <section class="bg-white pt-12 pb-12"> <div class="container mx-auto px-4"> <h2 class="text-2xl md:text-3xl mb-8">AVIS CLIENTS</h2> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"> <!-- Carte Avis 1 --> <div class="bg-[#FFF9EC] p-4 rounded shadow"> <p class="text-sm text-gray-800 mb-4">
+"J'ai adoré la variété des produits ! Livraison rapide et service au top."
+</p> <div class="text-sm">Julien M. - Bordeaux</div> <div class="text-xs text-yellow-500">★★★★★</div> </div> <!-- Carte Avis 2 --> <div class="bg-[#FFF9EC] p-4 rounded shadow"> <p class="text-sm text-gray-800 mb-4">
+"Enfin un site où je peux trouver des ingrédients exotiques authentiques."
+</p> <div class="text-sm">Louisa P. - Paris</div> <div class="text-xs text-yellow-500">★★★★☆</div> </div> <!-- Carte Avis 3 --> <div class="bg-[#FFF9EC] p-4 rounded shadow"> <p class="text-sm text-gray-800 mb-4">
+"Les recettes sont faciles à suivre, parfait pour découvrir de nouveaux plats."
+</p> <div class="text-sm">Emma L. - Rennes</div> <div class="text-xs text-yellow-500">★★★★★</div> </div> <!-- Carte Avis 4 --> <div class="bg-[#FFF9EC] p-4 rounded shadow"> <p class="text-sm text-gray-800 mb-4">
+"Service client réactif et produits de qualité, je recommande !"
+</p> <div class="text-sm">Mathilda D. - Lille</div> <div class="text-xs text-yellow-500">★★★★★</div> </div> </div> </div> </section> </div> ` })}`;
+}, "C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/index.astro", void 0);
+
+const $$file = "C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/index.astro";
+const $$url = "";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Index,
+  file: $$file,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };
