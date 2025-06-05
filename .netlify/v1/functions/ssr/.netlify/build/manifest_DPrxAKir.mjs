@@ -1,0 +1,132 @@
+import '@astrojs/internal-helpers/path';
+import 'kleur/colors';
+import { n as NOOP_MIDDLEWARE_HEADER, o as decodeKey } from './chunks/astro/server_Bqug4sl-.mjs';
+import 'clsx';
+import 'cookie';
+import 'es-module-lexer';
+import 'html-escaper';
+
+const NOOP_MIDDLEWARE_FN = async (_ctx, next) => {
+  const response = await next();
+  response.headers.set(NOOP_MIDDLEWARE_HEADER, "true");
+  return response;
+};
+
+const codeToStatusMap = {
+  // Implemented from tRPC error code table
+  // https://trpc.io/docs/server/error-handling#error-codes
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  TIMEOUT: 405,
+  CONFLICT: 409,
+  PRECONDITION_FAILED: 412,
+  PAYLOAD_TOO_LARGE: 413,
+  UNSUPPORTED_MEDIA_TYPE: 415,
+  UNPROCESSABLE_CONTENT: 422,
+  TOO_MANY_REQUESTS: 429,
+  CLIENT_CLOSED_REQUEST: 499,
+  INTERNAL_SERVER_ERROR: 500
+};
+Object.entries(codeToStatusMap).reduce(
+  // reverse the key-value pairs
+  (acc, [key, value]) => ({ ...acc, [value]: key }),
+  {}
+);
+
+function sanitizeParams(params) {
+  return Object.fromEntries(
+    Object.entries(params).map(([key, value]) => {
+      if (typeof value === "string") {
+        return [key, value.normalize().replace(/#/g, "%23").replace(/\?/g, "%3F")];
+      }
+      return [key, value];
+    })
+  );
+}
+function getParameter(part, params) {
+  if (part.spread) {
+    return params[part.content.slice(3)] || "";
+  }
+  if (part.dynamic) {
+    if (!params[part.content]) {
+      throw new TypeError(`Missing parameter: ${part.content}`);
+    }
+    return params[part.content];
+  }
+  return part.content.normalize().replace(/\?/g, "%3F").replace(/#/g, "%23").replace(/%5B/g, "[").replace(/%5D/g, "]");
+}
+function getSegment(segment, params) {
+  const segmentPath = segment.map((part) => getParameter(part, params)).join("");
+  return segmentPath ? "/" + segmentPath : "";
+}
+function getRouteGenerator(segments, addTrailingSlash) {
+  return (params) => {
+    const sanitizedParams = sanitizeParams(params);
+    let trailing = "";
+    if (addTrailingSlash === "always" && segments.length) {
+      trailing = "/";
+    }
+    const path = segments.map((segment) => getSegment(segment, sanitizedParams)).join("") + trailing;
+    return path || "/";
+  };
+}
+
+function deserializeRouteData(rawRouteData) {
+  return {
+    route: rawRouteData.route,
+    type: rawRouteData.type,
+    pattern: new RegExp(rawRouteData.pattern),
+    params: rawRouteData.params,
+    component: rawRouteData.component,
+    generate: getRouteGenerator(rawRouteData.segments, rawRouteData._meta.trailingSlash),
+    pathname: rawRouteData.pathname || void 0,
+    segments: rawRouteData.segments,
+    prerender: rawRouteData.prerender,
+    redirect: rawRouteData.redirect,
+    redirectRoute: rawRouteData.redirectRoute ? deserializeRouteData(rawRouteData.redirectRoute) : void 0,
+    fallbackRoutes: rawRouteData.fallbackRoutes.map((fallback) => {
+      return deserializeRouteData(fallback);
+    }),
+    isIndex: rawRouteData.isIndex,
+    origin: rawRouteData.origin
+  };
+}
+
+function deserializeManifest(serializedManifest) {
+  const routes = [];
+  for (const serializedRoute of serializedManifest.routes) {
+    routes.push({
+      ...serializedRoute,
+      routeData: deserializeRouteData(serializedRoute.routeData)
+    });
+    const route = serializedRoute;
+    route.routeData = deserializeRouteData(serializedRoute.routeData);
+  }
+  const assets = new Set(serializedManifest.assets);
+  const componentMetadata = new Map(serializedManifest.componentMetadata);
+  const inlinedScripts = new Map(serializedManifest.inlinedScripts);
+  const clientDirectives = new Map(serializedManifest.clientDirectives);
+  const serverIslandNameMap = new Map(serializedManifest.serverIslandNameMap);
+  const key = decodeKey(serializedManifest.key);
+  return {
+    // in case user middleware exists, this no-op middleware will be reassigned (see plugin-ssr.ts)
+    middleware() {
+      return { onRequest: NOOP_MIDDLEWARE_FN };
+    },
+    ...serializedManifest,
+    assets,
+    componentMetadata,
+    inlinedScripts,
+    clientDirectives,
+    routes,
+    serverIslandNameMap,
+    key
+  };
+}
+
+const manifest = deserializeManifest({"hrefRoot":"file:///C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/","cacheDir":"file:///C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/node_modules/.astro/","outDir":"file:///C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/dist/","srcDir":"file:///C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/","publicDir":"file:///C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/public/","buildClientDir":"file:///C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/dist/","buildServerDir":"file:///C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/.netlify/build/","adapterName":"@astrojs/netlify","routes":[{"file":"","links":[],"scripts":[],"styles":[],"routeData":{"type":"page","component":"_server-islands.astro","params":["name"],"segments":[[{"content":"_server-islands","dynamic":false,"spread":false}],[{"content":"name","dynamic":true,"spread":false}]],"pattern":"^\\/_server-islands\\/([^/]+?)\\/?$","prerender":false,"isIndex":false,"fallbackRoutes":[],"route":"/_server-islands/[name]","origin":"internal","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[],"routeData":{"type":"endpoint","isIndex":false,"route":"/_image","pattern":"^\\/_image\\/?$","segments":[[{"content":"_image","dynamic":false,"spread":false}]],"params":[],"component":"node_modules/astro/dist/assets/endpoint/generic.js","pathname":"/_image","prerender":false,"fallbackRoutes":[],"origin":"internal","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[],"routeData":{"route":"/api/login","isIndex":false,"type":"endpoint","pattern":"^\\/api\\/login\\/?$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"login","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/login.js","pathname":"/api/login","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[],"routeData":{"route":"/api/logout","isIndex":false,"type":"endpoint","pattern":"^\\/api\\/logout\\/?$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"logout","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/logout.js","pathname":"/api/logout","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[],"routeData":{"route":"/api/register","isIndex":false,"type":"endpoint","pattern":"^\\/api\\/register\\/?$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"register","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/register.js","pathname":"/api/register","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"inline","content":".path-animate{fill:none;stroke-width:9px;stroke-miterlimit:10;stroke-dasharray:6000;stroke-dashoffset:6000;animation:draw-path 4s ease-in-out forwards}@keyframes draw-path{to{stroke-dashoffset:0}}\n"},{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/apropos","isIndex":false,"type":"page","pattern":"^\\/Apropos\\/?$","segments":[[{"content":"Apropos","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/Apropos.astro","pathname":"/Apropos","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/catalogue/[id]","isIndex":false,"type":"page","pattern":"^\\/catalogue\\/([^/]+?)\\/?$","segments":[[{"content":"catalogue","dynamic":false,"spread":false}],[{"content":"id","dynamic":true,"spread":false}]],"params":["id"],"component":"src/pages/catalogue/[id].astro","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/catalogue","isIndex":true,"type":"page","pattern":"^\\/catalogue\\/?$","segments":[[{"content":"catalogue","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/catalogue/index.astro","pathname":"/catalogue","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/contact","isIndex":false,"type":"page","pattern":"^\\/Contact\\/?$","segments":[[{"content":"Contact","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/Contact.astro","pathname":"/Contact","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/dashboard","isIndex":false,"type":"page","pattern":"^\\/dashboard\\/?$","segments":[[{"content":"dashboard","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/dashboard.astro","pathname":"/dashboard","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/login","isIndex":false,"type":"page","pattern":"^\\/login\\/?$","segments":[[{"content":"login","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/login.astro","pathname":"/login","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/recettes/[id]","isIndex":false,"type":"page","pattern":"^\\/recettes\\/([^/]+?)\\/?$","segments":[[{"content":"recettes","dynamic":false,"spread":false}],[{"content":"id","dynamic":true,"spread":false}]],"params":["id"],"component":"src/pages/recettes/[id].astro","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/recettes","isIndex":true,"type":"page","pattern":"^\\/recettes\\/?$","segments":[[{"content":"recettes","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/recettes/index.astro","pathname":"/recettes","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/register","isIndex":false,"type":"page","pattern":"^\\/register\\/?$","segments":[[{"content":"register","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/register.astro","pathname":"/register","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/telechargements","isIndex":false,"type":"page","pattern":"^\\/telechargements\\/?$","segments":[[{"content":"telechargements","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/telechargements.astro","pathname":"/telechargements","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"styles":[{"type":"external","src":"/_astro/Apropos.BYDXvW2P.css"}],"routeData":{"route":"/","isIndex":true,"type":"page","pattern":"^\\/$","segments":[],"params":[],"component":"src/pages/index.astro","pathname":"/","prerender":false,"fallbackRoutes":[],"distURL":[],"origin":"project","_meta":{"trailingSlash":"ignore"}}}],"base":"/","trailingSlash":"ignore","compressHTML":true,"componentMetadata":[["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/Apropos.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/Contact.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/catalogue/[id].astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/catalogue/index.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/dashboard.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/index.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/login.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/recettes/[id].astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/recettes/index.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/register.astro",{"propagation":"none","containsHead":true}],["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/telechargements.astro",{"propagation":"none","containsHead":true}]],"renderers":[],"clientDirectives":[["idle","(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value==\"object\"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};\"requestIdleCallback\"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event(\"astro:idle\"));})();"],["load","(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event(\"astro:load\"));})();"],["media","(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener(\"change\",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event(\"astro:media\"));})();"],["only","(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event(\"astro:only\"));})();"],["visible","(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value==\"object\"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event(\"astro:visible\"));})();"]],"entryModules":{"\u0000noop-middleware":"_noop-middleware.mjs","\u0000@astro-page:src/pages/api/login@_@js":"pages/api/login.astro.mjs","\u0000@astro-page:src/pages/api/logout@_@js":"pages/api/logout.astro.mjs","\u0000@astro-page:src/pages/api/register@_@js":"pages/api/register.astro.mjs","\u0000@astro-page:src/pages/Apropos@_@astro":"pages/apropos.astro.mjs","\u0000@astro-page:src/pages/catalogue/[id]@_@astro":"pages/catalogue/_id_.astro.mjs","\u0000@astro-page:src/pages/catalogue/index@_@astro":"pages/catalogue.astro.mjs","\u0000@astro-page:src/pages/Contact@_@astro":"pages/contact.astro.mjs","\u0000@astro-page:src/pages/dashboard@_@astro":"pages/dashboard.astro.mjs","\u0000@astro-page:src/pages/login@_@astro":"pages/login.astro.mjs","\u0000@astro-page:src/pages/recettes/[id]@_@astro":"pages/recettes/_id_.astro.mjs","\u0000@astro-page:src/pages/recettes/index@_@astro":"pages/recettes.astro.mjs","\u0000@astro-page:src/pages/register@_@astro":"pages/register.astro.mjs","\u0000@astro-page:src/pages/telechargements@_@astro":"pages/telechargements.astro.mjs","\u0000@astro-page:src/pages/index@_@astro":"pages/index.astro.mjs","\u0000@astrojs-ssr-virtual-entry":"entry.mjs","\u0000@astro-renderers":"renderers.mjs","\u0000@astro-page:node_modules/astro/dist/assets/endpoint/generic@_@js":"pages/_image.astro.mjs","\u0000noop-actions":"_noop-actions.mjs","\u0000@astrojs-ssr-adapter":"_@astrojs-ssr-adapter.mjs","\u0000@astrojs-manifest":"manifest_DPrxAKir.mjs","C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/node_modules/unstorage/drivers/fs-lite.mjs":"chunks/fs-lite_COtHaKzy.mjs","C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/node_modules/astro/dist/assets/services/sharp.js":"chunks/sharp_C9GskaQ7.mjs","C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/register.astro?astro&type=script&index=0&lang.ts":"_astro/register.astro_astro_type_script_index_0_lang._llfaYMp.js","astro:scripts/before-hydration.js":""},"inlinedScripts":[["C:/Users/enzor/Documents/GitHub/projet-co-s2-2025-05_gustomondo/src/pages/register.astro?astro&type=script&index=0&lang.ts","const s=document.getElementById(\"register-form\"),e=document.getElementById(\"message\");s.addEventListener(\"submit\",async c=>{c.preventDefault(),e.textContent=\"\",e.className=\"mt-4 text-center\";const i=s.email.value.trim(),m=s.username.value.trim(),n=s.password.value,o=s[\"confirm-password\"].value,d=s.avatar.files[0];if(n!==o){e.textContent=\"Les mots de passe ne correspondent pas.\",e.classList.add(\"text-red-600\");return}if(!d){e.textContent=\"Vous devez sélectionner une image pour l’avatar.\",e.classList.add(\"text-red-600\");return}const t=new FormData;t.append(\"email\",i),t.append(\"username\",m),t.append(\"avatar\",d),t.append(\"password\",n),t.append(\"passwordConfirm\",o);try{const a=await fetch(\"/api/register\",{method:\"POST\",body:t}),r=await a.json();a.ok&&r.success?(e.textContent=\"Compte créé avec succès ! Redirection en cours…\",e.classList.add(\"text-green-600\"),setTimeout(()=>{window.location.href=\"/login\"},2e3)):(e.textContent=r.message||\"Une erreur est survenue.\",e.classList.add(\"text-red-600\"),console.error(\"Détails API:\",r.details||r.pocketbaseError))}catch(a){console.error(\"[Fetch Error]\",a),e.textContent=\"Impossible de joindre le serveur.\",e.classList.add(\"text-red-600\")}});"]],"assets":["/_astro/Apropos.BYDXvW2P.css","/APP1.webp","/APP2.webp","/APP3.webp","/arepas.png","/background.png","/enzo.png","/facebook.svg","/favicon.svg","/google.svg","/gustomondo-logo.png","/icon-location.png","/icon-products.png","/icon-quality.png","/icon-recipe.png","/icon-taste.png","/icon-team.png","/instagram.svg","/linkedin.svg","/lucas.png","/max.png","/produit1.png","/produit2.png","/produit3.png","/tiktok.svg","/vague.svg","/recettes-pdf/Ají-molido-salsa.pdf","/recettes-pdf/Arepas-farcies.pdf","/recettes-pdf/Açaï-bowl.pdf","/recettes-pdf/Bowl-tropical.pdf","/recettes-pdf/Cancha-tajín.pdf","/recettes-pdf/Causa-limena.pdf","/recettes-pdf/Chicha-morada.pdf","/recettes-pdf/Choripan.pdf","/recettes-pdf/Coxinhas-fourrées.pdf","/recettes-pdf/Cupuaçu-mousse-express.pdf","/recettes-pdf/Elote-revisite.pdf","/recettes-pdf/Empanadas-sucrees.pdf","/recettes-pdf/Granadilla-au-lait-de-coco.pdf","/recettes-pdf/Guacamole-de-pitahaya-et-jalapeno.pdf","/recettes-pdf/Pandebonos.pdf","/recettes-pdf/Patacones-burger.pdf","/recettes-pdf/Smoothie-goyave-lucuma.pdf","/recettes-pdf/Taco-de-nopal.pdf","/recettes-pdf/Tacos-sucrés.pdf","/recettes-pdf/Tostadas.pdf","/recettes-pdf/Yuca-frite.pdf"],"buildFormat":"directory","checkOrigin":true,"serverIslandNameMap":[],"key":"sDWb6BJ0QOy4vFIoeRX9iUVUQpGL5YcPmnJCsuFGOe8=","sessionConfig":{"driver":"fs-lite","options":{"base":"C:\\Users\\enzor\\Documents\\GitHub\\projet-co-s2-2025-05_gustomondo\\node_modules\\.astro\\sessions"}}});
+if (manifest.sessionConfig) manifest.sessionConfig.driverModule = () => import('./chunks/fs-lite_COtHaKzy.mjs');
+
+export { manifest };

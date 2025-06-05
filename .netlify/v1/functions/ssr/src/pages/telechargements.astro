@@ -1,0 +1,166 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const listeDesPDF = [
+  // Première série de PDFs
+  {
+    titre: "Açaï Bowl façon Amazonie",
+    url: "/recettes-pdf/Açaï-bowl.pdf",
+    description:
+      "Mixez l’açaï avec la banane et le cupuaçu, versez dans un bol et ajoutez granola et fruits frais.",
+  },
+  {
+    titre: "Ají Molido Salsa",
+    url: "/recettes-pdf/Ají-molido-salsa.pdf",
+    description:
+      "Mélangez ají molido, huile d’olive, sel et vinaigre. Laissez reposer 10 min avant utilisation.",
+  },
+  {
+    titre: "Arepas Farcies au Feijão & Chimichurri",
+    url: "/recettes-pdf/Arepas-farcies.pdf",
+    description:
+      "Réchauffez les arepas, faites revenir haricots noirs et chimichurri avec l’oignon, puis garnissez les arepas.",
+  },
+  {
+    titre: "Bowl Tropical Açaï/Cajá/Chuchu",
+    url: "/recettes-pdf/Bowl-tropical.pdf",
+    description:
+      "Pelez cajá et chuchu, mixez avec l’açaï et le miel. Versez dans un bol, garnissez de granola et fruits frais.",
+  },
+  {
+    titre: "Cancha Croquante au Tajín",
+    url: "/recettes-pdf/Cancha-tajín.pdf",
+    description:
+      "Mélangez la cancha (maïs grillé) avec du tajín. Servez en snack ou en topping croustillant.",
+  },
+  {
+    titre: "Causa Limeña revisité au Guacamole de Nopal",
+    url: "/recettes-pdf/Causa-limena.pdf",
+    description:
+      "Préparez une purée de pommes de terre à l’ají amarillo, grillez le nopal, réalisez un guacamole à l’avocat, puis assemblez en couches.",
+  },
+  {
+    titre: "Chicha Morada glacée maison",
+    url: "/recettes-pdf/Chicha-morada.pdf",
+    description:
+      "Faites bouillir le maïs violet avec cannelle et fruits pendant 30 min, filtrez, sucrez et laissez refroidir avant service.",
+  },
+  {
+    titre: "Choripán à la Sauce Huacatay",
+    url: "/recettes-pdf/Choripan.pdf",
+    description:
+      "Grillez les chorizos, coupez les pains, garnissez de chorizo grillé et nappez de sauce huacatay.",
+  },
+  {
+    titre: "Coxinhas Fourrées au Poulet Mariné",
+    url: "/recettes-pdf/Coxinhas-fourrées.pdf",
+    description:
+      "Mélangez poulet effiloché, piment malagueta et fromage. Formez des boulettes, farcissez-les avec la pâte puis faites frire.",
+  },
+  {
+    titre: "Cupuaçu Mousse Express",
+    url: "/recettes-pdf/Cupuaçu-mousse-express.pdf",
+    description:
+      "Fouettez la crème, incorporez délicatement la purée de cupuaçu et le sucre, puis laissez reposer 1 h au frais.",
+  },
+
+  // Deuxième série de PDFs
+  {
+    titre: "Taco de Nopal & Salsa Verte",
+    url: "/recettes-pdf/Taco-de-nopal.pdf",
+    description:
+      "Faites griller le nopal tranché, préparez la salsa verte avec tomatillos et jalapeño, puis garnissez les tortillas.",
+  },
+  {
+    titre: "Tacos Sucrés à la Chirimoya et au Miel",
+    url: "/recettes-pdf/Tacos-sucrés.pdf",
+    description:
+      "Réchauffez les tortillas, garnissez de pulpe de chirimoya, arrosez de miel et saupoudrez d’une pincée de cannelle.",
+  },
+  {
+    titre: "Tostadas à la Papaye Mexicaine & Tajín",
+    url: "/recettes-pdf/Tostadas.pdf",
+    description:
+      "Épluchez et découpez la papaye en dés, mélangez-la avec du tajín et du jus de citron vert, puis disposez sur des tostadas.",
+  },
+  {
+    titre: "Elote revisité façon Street-Food Gourmet",
+    url: "/recettes-pdf/Elote-revisite.pdf",
+    description:
+      "Faites cuire les épis de maïs, enrobez-les d’une mayo épicée au tajín, puis parsemez de chicharrones et de fromage rallé.",
+  },
+  {
+    titre: "Empanadas Sucrées à la Patate Douce & Lucuma",
+    url: "/recettes-pdf/Empanadas-sucrees.pdf",
+    description:
+      "Faites cuire les patates douces, écrasez-les avec lucuma et cannelle, déposez au centre des ronds de pâte, puis cuisez au four.",
+  },
+  {
+    titre: "Dessert Granadilla au Lait de Coco",
+    url: "/recettes-pdf/Granadilla-au-lait-de-coco.pdf",
+    description:
+      "Ouvrez les granadillas, récupérez la pulpe, mélangez-la au lait de coco et au sucre, puis servez frais.",
+  },
+  {
+    titre: "Guacamole de Pitahaya & Jalapeño",
+    url: "/recettes-pdf/Guacamole-de-pitahaya-et-jalapeno.pdf",
+    description:
+      "Écrasez les avocats avec jus de citron vert, ajoutez la pitahaya en dés et le jalapeño émincé, puis mélangez délicatement.",
+  },
+  {
+    titre: "Pandebonos au Fromage Frais",
+    url: "/recettes-pdf/Pandebonos.pdf",
+    description:
+      "Mélangez farine de manioc, fromage frais, œuf et lait, formez des boules puis cuisez à 180 °C jusqu’à dorure.",
+  },
+  {
+    titre: "Patacones Burger Fusion",
+    url: "/recettes-pdf/Patacones-burger.pdf",
+    description:
+      "Faites frire les bananes plantains, préparez la viande façon chimichurri, puis montez le burger entre deux patacones.",
+  },
+  {
+    titre: "Smoothie Goyave-Lucuma",
+    url: "/recettes-pdf/Smoothie-goyave-lucuma.pdf",
+    description:
+      "Mixez jus de goyave, banane, yaourt nature et lucuma en poudre jusqu’à obtention d’une texture lisse, servez frais.",
+  },
+];
+---
+
+<Layout title="Téléchargements de recettes (PDF)">
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Titre principal -->
+    <h1 class="text-3xl font-bold mb-6">Téléchargez nos recettes en PDF</h1>
+    <p class="text-gray-600 mb-8">
+      Retrouvez ci-dessous toutes nos fiches recettes au format PDF.  
+      Cliquez sur « Télécharger » pour récupérer chaque document sur votre appareil.
+    </p>
+
+    <!-- Liste des recettes PDF -->
+    <ul class="space-y-6">
+      {listeDesPDF.map((item) => (
+        <li class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center p-6">
+            <!-- Colonne gauche : titre + description -->
+            <div class="flex-1">
+              <h2 class="text-xl font-semibold text-gray-800">{item.titre}</h2>
+              <p class="mt-2 text-gray-600">{item.description}</p>
+            </div>
+
+            <!-- Colonne droite : bouton "Télécharger" -->
+            <div class="mt-4 sm:mt-0 sm:ml-6">
+              <a
+                href={item.url}
+                download
+                class="inline-block px-4 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition"
+              >
+                Télécharger
+              </a>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>

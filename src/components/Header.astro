@@ -1,5 +1,5 @@
 ---
-import AuthButtons from './AuthButtons.astro';
+import AuthButtons from "./AuthButtons.astro";
 ---
 
 <header class="bg-gradient-to-r from-[#D2193E] to-[#F77468] py-4 px-6 relative z-50">
@@ -49,9 +49,9 @@ import AuthButtons from './AuthButtons.astro';
                  group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto
                  group-focus-within:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto"
         >
-          <a href="/catalogue"         class="block px-4 py-2 hover:bg-gray-100">Catalogue</a>
-          <a href="/recettes"  class="block px-4 py-2 hover:bg-gray-100">Recettes</a>
-          <a href="/telechargements"  class="block px-4 py-2 hover:bg-gray-100">E-books</a>
+          <a href="/catalogue"       class="block px-4 py-2 hover:bg-gray-100">Catalogue</a>
+          <a href="/recettes"        class="block px-4 py-2 hover:bg-gray-100">Recettes</a>
+          <a href="/telechargements"  class="block px-4 py-2 hover:bg-gray-100">E‐books</a>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ import AuthButtons from './AuthButtons.astro';
     </div>
   </div>
 
-  <!-- Off-canvas Mobile Menu -->
+  <!-- Off‐canvas Mobile Menu -->
   <div
     id="mobile-menu"
     class="fixed top-0 left-0 h-full w-64 bg-[#F77468] text-white shadow
@@ -83,13 +83,13 @@ import AuthButtons from './AuthButtons.astro';
     <nav class="mt-8 flex flex-col space-y-4 px-4">
       <a href="/Apropos"          class="hover:underline">À Propos</a>
       <a href="/catalogue"        class="hover:underline">Catalogue</a>
-      <a href="/recettes" class="hover:underline">Recettes</a>
+      <a href="/recettes"         class="hover:underline">Recettes</a>
       <a href="/Contact"          class="hover:underline">Contact</a>
-      <a href="/telechargements"          class="hover:underline">E-books</a>
+      <a href="/telechargements"  class="hover:underline">E‐books</a>
     </nav>
 
     <div class="mt-8 border-t border-white pt-4 px-4 space-y-4">
-      <AuthButtons mobile client:load />
+      
     </div>
   </div>
 
@@ -103,7 +103,6 @@ import AuthButtons from './AuthButtons.astro';
       menu.classList.remove('-translate-x-full');
       openBtn.setAttribute('aria-expanded', 'true');
     });
-
     closeBtn.addEventListener('click', () => {
       menu.classList.add('-translate-x-full');
       openBtn.setAttribute('aria-expanded', 'false');
