@@ -2,7 +2,7 @@
 
 import PocketBase from 'pocketbase';
 
-export const pb = new PocketBase("https://gustomundo.lucas-lebars.fr:443");
+const pb = new PocketBase('http://127.0.0.1:8090');
 
 pb.autoCancellation(false);
 
@@ -90,42 +90,6 @@ export async function getProduitsByFilters(categorie = '', pays = '') {
 }
 
 
-
-
-
-
-
-
-
-export async function getProduitsFiltered({ pays, produits, priceMin, priceMax }) {
-    let filterArr = [];
-  
-    // Ici, on utilise "Pays" et "Produits" exactement comme dans PocketBase
-    if (pays) {
-      filterArr.push(`Pays = "${pays}"`);
-    }
-    if (produits) {
-      filterArr.push(`Produits = "${produits}"`);
-    }
-    if (priceMin !== undefined) {
-      filterArr.push(`price >= ${priceMin}`);
-    }
-    if (priceMax !== undefined) {
-      filterArr.push(`price <= ${priceMax}`);
-    }
-  
-    const filterQuery = filterArr.join(' && ');
-    const options = filterQuery ? { filter: filterQuery } : {};
-  
-    // Récupération des produits filtrés (max 200 items)
-    const produitsList = await pb.collection('Produit').getFullList(200, options);
-  
-    // Ajout d’une propriété img pour l’URL de l’image, si besoin
-    return produitsList.map((produit) => {
-      produit.img = pb.files.getURL(produit, produit.images);
-      return produit;
-    });
-  }
 
 
 export async function createCommande(data) {
